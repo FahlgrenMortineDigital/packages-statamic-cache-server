@@ -1,0 +1,38 @@
+{
+  "name": "fahlgrendigital/packages-statamic-cache-server",
+  "description": "Configure statamic application as a cache building server",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "FahlgrendigitalPackages\\StatamicCacheServer\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Andrew Clinton",
+      "email": "andrew.clinton@fahlgren.com"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "illuminate/support": "^10.0",
+    "statamic/cms": "^4.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "pixelfear/composer-dist-plugin": true
+    }
+  },
+  "require-dev": {
+    "orchestra/testbench": "^8.0"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "FahlgrendigitalPackages\\StatamicCacheServer\\CacheServerProvider"
+      ]
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable" : true
+}
