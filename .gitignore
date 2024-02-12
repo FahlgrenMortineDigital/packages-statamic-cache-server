@@ -9,3 +9,5 @@ composer.lock
 
 # Testing
 .phpunit.result.cache
+
+.DS_Store
