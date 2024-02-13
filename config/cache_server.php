@@ -1,5 +1,7 @@
 <?php
 
+use FahlgrendigitalPackages\StatamicCacheServer\Enums\CacheHeader;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -31,8 +33,8 @@ return [
      |--------------------------------------------------------------------------
      */
     'triggers' => [
-        'build',
-        'static-clear'
+        CacheHeader::BUILD        => env('CACHE_SERVER_HEADER_BUILD', CacheHeader::BUILD),
+        CacheHeader::STATIC_CLEAR => env('CACHE_SERVER_HEADER_STATIC_CLEAR', CacheHeader::STATIC_CLEAR),
     ],
 
     /*
@@ -42,5 +44,5 @@ return [
      */
     'include'  => [
 
-    ]
+    ],
 ];

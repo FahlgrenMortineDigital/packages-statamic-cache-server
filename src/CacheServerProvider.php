@@ -2,6 +2,7 @@
 
 namespace FahlgrendigitalPackages\StatamicCacheServer;
 
+use FahlgrendigitalPackages\StatamicCacheServer\Enums\CacheHeader;
 use FahlgrendigitalPackages\StatamicCacheServer\Http\Middleware\CacheServerStaticCacheFileTransfer;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Config;
@@ -43,11 +44,12 @@ class CacheServerProvider extends ServiceProvider
         Route::macro('isCacheServerRequest', function () {
             return CacheServer::enabled() # enabled
                 && !is_null(request()->header(CacheServer::header())) # not empty
-                && in_array(request()->header(CacheServer::header()), config('cache_server.triggers')); #in accepted values array
+                && in_array(request()->header(CacheServer::header()), CacheServer::triggers()); #in accepted values array
         });
 
         Route::macro('isCacheServerBuildRequest', function () {
-            return CacheServer::enabled() && request()->header(CacheServer::header()) === 'build';
+            return CacheServer::enabled()
+                && request()->header(CacheServer::header()) === config('cache_server.triggers.' . CacheHeader::BUILD);
         });
     }
 }
