@@ -222,4 +222,4 @@ bit squirrely. This table only needs to exist on the cache server. Depending on 
 that `jobs` table may end up on the wrong server and in the wrong database.
 
 Currently, we don't have an elegant solution for this other than export the `jobs` schema and importing it into the correct
-queue database. SORRY!
+queue database. After fixing the location of this table, the cache queue should run as expected. SORRY!
