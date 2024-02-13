@@ -2,6 +2,7 @@
 
 namespace FahlgrendigitalPackages\StatamicCacheServer\Actions;
 
+use FahlgrendigitalPackages\StatamicCacheServer\Enums\CacheHeader;
 use Illuminate\Support\Facades\Http;
 
 /**
@@ -14,11 +15,12 @@ class TriggerRemoteStaticFilesClear extends BaseAction
 
     public function handle(): bool
     {
-        $cache_server_header = config('cache_server.header');
+        $header       = config('cache_server.header');
+        $header_value = config('cache_server.triggers.' . CacheHeader::STATIC_CLEAR);
 
         return Http::asJson()
             // include header so it gets picked up by cache servers and NOT the app server
-                   ->withHeaders([$cache_server_header => 'static-clear'])
+                   ->withHeaders([$header => $header_value])
                    ->get(route('static-files.clear'))->successful();
     }
 }
