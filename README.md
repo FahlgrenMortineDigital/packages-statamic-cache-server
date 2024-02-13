@@ -80,7 +80,7 @@ Page requests for the following content types are done by default in this comman
 - Custom routes
 - Custom runway routes
 
-**Note:** The runway routes can be configured at cache_server.include.runway by supplying an array of Runway resource Models. It would
+**Note:** The runway routes can be configured at `cache_server.include.runway` by supplying an array of Runway resource Models. It would
 look something like this:
 
 ```php
