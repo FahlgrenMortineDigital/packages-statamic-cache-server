@@ -2,6 +2,7 @@
 
 namespace FahlgrendigitalPackages\StatamicCacheServer\Jobs;
 
+use FahlgrendigitalPackages\StatamicCacheServer\CacheServer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -27,14 +28,14 @@ class UploadStaticCacheFile implements ShouldQueue
      */
     public function handle(): void
     {
-        $success = Storage::disk('static-cache')
+        $success = Storage::disk(CacheServer::remoteDisk())
                           ->put(
                               $this->absolute_cache_path,
-                              Storage::disk('public')->get($this->absolute_cache_path)
+                              Storage::disk(CacheServer::localDisk())->get($this->absolute_cache_path)
                           );
 
         if (!$success) {
-            $this->fail(new \Exception("Could not upload cache file to static-cache disk: {$this->absolute_cache_path}"));
+            $this->fail(new \Exception("Could not upload cache file to " . CacheServer::remoteDisk() . " disk: {$this->absolute_cache_path}"));
         }
     }
 }

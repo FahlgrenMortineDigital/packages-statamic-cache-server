@@ -2,6 +2,7 @@
 
 namespace FahlgrendigitalPackages\StatamicCacheServer\Actions;
 
+use FahlgrendigitalPackages\StatamicCacheServer\CacheServer;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -11,10 +12,10 @@ class ClearRemoteStaticCacheFiles extends BaseAction
 {
     public function handle(): bool
     {
-        collect(Storage::disk('cache_server.disks.remote_static_files')
+        collect(Storage::disk(CacheServer::remoteDisk())
                       ->allFiles())
             ->each(function ($path) {
-                Storage::disk('cache_server.disks.remote_static_files')->delete($path);
+                Storage::disk(CacheServer::remoteDisk())->delete($path);
             });
 
         return true;

@@ -2,6 +2,7 @@
 
 namespace FahlgrendigitalPackages\StatamicCacheServer\Actions;
 
+use FahlgrendigitalPackages\StatamicCacheServer\CacheServer;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -18,9 +19,10 @@ class ClearLocalStaticCacheFiles extends BaseAction
             return false;
         }
 
+        //change to loop through all in case parent houses more than just static files
         $parts = collect(explode('/', $destination))->filter();
 
-        return Storage::disk(config('cache_server.disks.local_static_files'))
+        return Storage::disk(CacheServer::localDisk())
                       ->deleteDirectory($parts->last());
     }
 }

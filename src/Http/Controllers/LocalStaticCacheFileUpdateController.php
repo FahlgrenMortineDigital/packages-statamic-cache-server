@@ -2,6 +2,7 @@
 
 namespace FahlgrendigitalPackages\StatamicCacheServer\Http\Controllers;
 
+use FahlgrendigitalPackages\StatamicCacheServer\CacheServer;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,10 +14,10 @@ class LocalStaticCacheFileUpdateController extends Controller
         $success    = false;
 
         try {
-            if (Storage::disk(config('cache_server.disks.remote_static_files'))->has($cache_path)) {
-                $success = Storage::disk(config('cache_server.disks.local_static_files'))
+            if (Storage::disk(CacheServer::remoteDisk())->has($cache_path)) {
+                $success = Storage::disk(CacheServer::localDisk())
                                   ->put(
-                                      $cache_path, Storage::disk(config('cache_server.disks.remote_static_files'))->get($cache_path)
+                                      $cache_path, Storage::disk(CacheServer::remoteDisk())->get($cache_path)
                                   );
             }
         } catch (\Exception $e) {

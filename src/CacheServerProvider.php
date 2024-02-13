@@ -13,18 +13,19 @@ class CacheServerProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $static_cache_disk = Config::get('filesystems.disks.static-cache', null);
+        $disk              = CacheServer::remoteDisk();
+        $static_cache_disk = Config::get("filesystems.disks.$disk", null);
 
-        if(!$static_cache_disk) {
-            throw new \Exception("Cache Server: missing {static-cache} disk driver. Please configure a driver.");
+        if (!$static_cache_disk) {
+            throw new \Exception("Cache Server: missing {$disk} disk driver. Please configure a driver.");
         }
     }
 
     public function boot(): void
     {
-        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
 
-        if(config('cache_server.enabled')) {
+        if (CacheServer::enabled()) {
             Statamic::booted(function () {
                 /** @var Router $router */
                 $router = $this->app->make(Router::class);
@@ -36,17 +37,17 @@ class CacheServerProvider extends ServiceProvider
         }
 
         Route::macro('isAppServerRequest', function () {
-            return !config('cache_server.enabled');
+            return !CacheServer::enabled();
         });
 
         Route::macro('isCacheServerRequest', function () {
-            return config('cache_server.enabled') # enabled
-                && !is_null(request()->header(config('cache_server.header'))) # not empty
-                && in_array(request()->header(config('cache_server.header')), config('cache_server.triggers')); #in accepted values array
+            return CacheServer::enabled() # enabled
+                && !is_null(request()->header(CacheServer::header())) # not empty
+                && in_array(request()->header(CacheServer::header()), config('cache_server.triggers')); #in accepted values array
         });
 
         Route::macro('isCacheServerBuildRequest', function () {
-            return config('cache_server.enabled') && request()->header(config('cache_server.header')) === 'build';
+            return CacheServer::enabled() && request()->header(CacheServer::header()) === 'build';
         });
     }
 }
