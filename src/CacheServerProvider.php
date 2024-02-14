@@ -2,6 +2,7 @@
 
 namespace FahlgrendigitalPackages\StatamicCacheServer;
 
+use Closure;
 use FahlgrendigitalPackages\StatamicCacheServer\Enums\CacheHeader;
 use FahlgrendigitalPackages\StatamicCacheServer\Http\Middleware\CacheServerStaticCacheFileTransfer;
 use Illuminate\Routing\Router;
@@ -12,13 +13,22 @@ use Statamic\Statamic;
 
 class CacheServerProvider extends ServiceProvider
 {
+    public function register(): void
+    {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/cache-server.php', 'cache-server'
+        );
+    }
+
     public function boot(): void
     {
         $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
 
-        $this->publishes([
-            __DIR__ . '/../config/cache_server.php' => config_path('cache_server.php'),
-        ], 'cache-server-config');
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../config/cache-server.php' => config_path('cache-server.php'),
+            ], ['cache-server', 'cache-server-config']);
+        }
 
         if (CacheServer::enabled()) {
             Statamic::booted(function () {
@@ -43,17 +53,29 @@ class CacheServerProvider extends ServiceProvider
 
         Route::macro('isCacheServerBuildRequest', function () {
             return CacheServer::enabled()
-                && request()->header(CacheServer::header()) === config('cache_server.triggers.' . CacheHeader::BUILD);
+                && CacheServer::isBuildRequest();
         });
 
         if (!$this->confirmRemoteDiskIsConfigured()) {
             throw new \Exception("Cache Server: missing remote cache disk driver. Please configure a driver.");
+        }
+
+        if (!$this->confirmLocalDiskIsConfigured()) {
+            throw new \Exception("Cache Server: missing local cache disk driver. Please configure a driver.");
         }
     }
 
     protected function confirmRemoteDiskIsConfigured(): bool
     {
         $disk = CacheServer::remoteDisk();
-        return Config::get("filesystems.disks.$disk", null);
+
+        return $this->app->make('config')->has("filesystems.disks.$disk");
+    }
+
+    protected function confirmLocalDiskIsConfigured(): bool
+    {
+        $disk = CacheServer::localDisk();
+
+        return $this->app->make('config')->has("filesystems.disks.$disk");
     }
 }
