@@ -17,7 +17,7 @@ return [
     */
     'disks'    => [
         'local_static_files'  => env('CACHE_SERVER_LOCAL_FILES_DISK', 'public'),
-        'remote_static_files' => env('CACHE_SERVER_LOCAL_FILES_DISK', 'static-cache'),
+        'remote_static_files' => env('CACHE_SERVER_REMOTE_FILES_DISK', 'static-cache'),
     ],
 
     /*
