@@ -21,6 +21,7 @@ use Statamic\Console\RunsInPlease;
 use Statamic\Entries\Collection as EntriesCollection;
 use Statamic\Entries\Entry;
 use Statamic\Facades\URL;
+use Statamic\Facades;
 use Statamic\Http\Controllers\FrontendController;
 use Statamic\StaticCaching\Cacher as StaticCacher;
 use Statamic\Support\Str;
