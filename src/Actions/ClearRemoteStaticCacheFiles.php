@@ -12,8 +12,8 @@ class ClearRemoteStaticCacheFiles extends BaseAction
 {
     public function handle(): bool
     {
-        collect(Storage::disk(CacheServer::remoteDisk())
-                      ->allFiles())
+        //delete each file instead of the whole directory in case that would be too aggressive
+        collect(Storage::disk(CacheServer::remoteDisk())->allFiles())
             ->each(function ($path) {
                 Storage::disk(CacheServer::remoteDisk())->delete($path);
             });
