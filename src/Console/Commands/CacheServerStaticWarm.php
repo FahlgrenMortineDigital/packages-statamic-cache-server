@@ -107,6 +107,8 @@ class CacheServerStaticWarm extends Command
             } else {
                 $this->error("Uh oh. Could not clear static file caches...");
             }
+
+            $this->output->newLine();
         }
 
         if ($this->shouldQueue) {
