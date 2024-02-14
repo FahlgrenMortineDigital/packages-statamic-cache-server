@@ -308,7 +308,7 @@ class CacheServerStaticWarm extends Command
         $this->line('[ ] Custom runway routes...');
         $urls = [];
 
-        foreach (config('cache-server.include.runway') as $include) {
+        foreach (config('cache-server.include.runway', []) as $include) {
             // has to be a real class and leverage runway routes to generate URIs
             if (class_exists($include)
                 && in_array(\DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes::class, class_uses(new $include))) {
