@@ -2,12 +2,9 @@
 
 namespace FahlgrendigitalPackages\StatamicCacheServer;
 
-use Closure;
 use FahlgrendigitalPackages\StatamicCacheServer\Console\Commands\CacheServerStaticWarm;
-use FahlgrendigitalPackages\StatamicCacheServer\Enums\CacheHeader;
 use FahlgrendigitalPackages\StatamicCacheServer\Http\Middleware\CacheServerStaticCacheFileTransfer;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Statamic\Statamic;
@@ -17,15 +14,20 @@ class CacheServerProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config/cache-server.php', 'cache-server'
+            __DIR__ . '/../config/cache-server.php', 'cache-server'
         );
     }
 
     public function boot(): void
     {
-        Route::group(['middleware' => 'api'], function () {
-            $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
-        });
+        Route::group(
+            [
+                'middleware' => 'api',
+                'prefix'     => 'api'
+            ],
+            function () {
+                $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+            });
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -55,7 +57,7 @@ class CacheServerProvider extends ServiceProvider
         Route::macro('isCacheServerRequest', function () {
             return CacheServer::enabled() # enabled
                 && !is_null(request()->header(CacheServer::header())) # not empty
-                && in_array(request()->header(CacheServer::header()), CacheServer::triggers()); #in accepted values array
+                && in_array(request()->header(CacheServer::header()), array_keys(CacheServer::triggers())); #in accepted values array
         });
 
         Route::macro('isCacheServerBuildRequest', function () {

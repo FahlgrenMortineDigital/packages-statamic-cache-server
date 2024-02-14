@@ -15,12 +15,12 @@ class TriggerRemoteStaticFilesClear extends BaseAction
 
     public function handle(): bool
     {
-        $header       = config('cache_server.header');
-        $header_value = config('cache_server.triggers.' . CacheHeader::STATIC_CLEAR);
+        $header       = config('cache-server.header');
+        $header_value = config('cache-server.triggers.' . CacheHeader::STATIC_CLEAR);
 
         return Http::asJson()
             // include header so it gets picked up by cache servers and NOT the app server
                    ->withHeaders([$header => $header_value])
-                   ->get(route('static-files.clear'))->successful();
+                   ->get(route('cache-server.static-files.clear'))->successful();
     }
 }

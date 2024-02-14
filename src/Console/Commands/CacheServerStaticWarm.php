@@ -75,7 +75,7 @@ class CacheServerStaticWarm extends Command
 
     private function warm(): void
     {
-        $cache_server_header = config('cache_server.header');
+        $cache_server_header = config('cache-server.header');
         $client_options      = [
             'verify'  => $this->shouldVerifySsl(),
             'auth'    => $this->option('user') && $this->option('password')
@@ -307,7 +307,7 @@ class CacheServerStaticWarm extends Command
         $this->line('[ ] Custom runway routes...');
         $urls = [];
 
-        foreach (config('cache_server.include.runway') as $include) {
+        foreach (config('cache-server.include.runway') as $include) {
             // has to be a real class and leverage runway routes to generate URIs
             if (class_exists($include)
                 && in_array(\DoubleThreeDigital\Runway\Routing\Traits\RunwayRoutes::class, class_uses(new $include))) {
