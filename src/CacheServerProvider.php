@@ -12,22 +12,12 @@ use Statamic\Statamic;
 
 class CacheServerProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-        $disk              = CacheServer::remoteDisk();
-        $static_cache_disk = Config::get("filesystems.disks.$disk", null);
-
-        if (!$static_cache_disk) {
-            throw new \Exception("Cache Server: missing {$disk} disk driver. Please configure a driver.");
-        }
-    }
-
     public function boot(): void
     {
         $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
 
         $this->publishes([
-            __DIR__.'/../config/cache_server.php' => config_path('cache_server.php'),
+            __DIR__ . '/../config/cache_server.php' => config_path('cache_server.php'),
         ], 'cache-server-config');
 
         if (CacheServer::enabled()) {
@@ -55,5 +45,15 @@ class CacheServerProvider extends ServiceProvider
             return CacheServer::enabled()
                 && request()->header(CacheServer::header()) === config('cache_server.triggers.' . CacheHeader::BUILD);
         });
+
+        if (!$this->confirmRemoteDiskIsConfigured()) {
+            throw new \Exception("Cache Server: missing remote cache disk driver. Please configure a driver.");
+        }
+    }
+
+    protected function confirmRemoteDiskIsConfigured(): bool
+    {
+        $disk = CacheServer::remoteDisk();
+        return Config::get("filesystems.disks.$disk", null);
     }
 }
