@@ -3,6 +3,7 @@
 namespace FahlgrendigitalPackages\StatamicCacheServer;
 
 use Closure;
+use FahlgrendigitalPackages\StatamicCacheServer\Console\Commands\CacheServerStaticWarm;
 use FahlgrendigitalPackages\StatamicCacheServer\Enums\CacheHeader;
 use FahlgrendigitalPackages\StatamicCacheServer\Http\Middleware\CacheServerStaticCacheFileTransfer;
 use Illuminate\Routing\Router;
@@ -28,6 +29,10 @@ class CacheServerProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../config/cache-server.php' => config_path('cache-server.php'),
             ], ['cache-server', 'cache-server-config']);
+
+            $this->commands([
+                CacheServerStaticWarm::class
+            ]);
         }
 
         if (CacheServer::enabled()) {

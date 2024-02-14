@@ -30,7 +30,10 @@
     "laravel": {
       "providers": [
         "FahlgrendigitalPackages\\StatamicCacheServer\\CacheServerProvider"
-      ]
+      ],
+      "aliases": {
+        "CacheServer": "FahlgrendigitalPackages\\StatamicCacheServer\\Facades\\CacheServer"
+      }
     }
   },
   "minimum-stability": "dev",
