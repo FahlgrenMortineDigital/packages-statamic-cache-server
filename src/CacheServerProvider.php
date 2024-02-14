@@ -26,6 +26,10 @@ class CacheServerProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
 
+        $this->publishes([
+            __DIR__.'/../config/cache_server.php' => config_path('cache_server.php'),
+        ], 'cache-server-config');
+
         if (CacheServer::enabled()) {
             Statamic::booted(function () {
                 /** @var Router $router */
