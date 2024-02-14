@@ -141,7 +141,6 @@ Whatever architecture is chosen, this package has some limitations which need to
 
 ### Limitations
 
-- If leveraging the `full` strategy, only **one caching** server is supported.
 - A central, remote cache store that the application and cache servers share.
 - A central, remote image store that the application and cache servers share.
 - A central DB that the application and cache servers share for content (if you are leveraging a DB for content storage)
@@ -215,6 +214,22 @@ then in your `database` config the following section will need to be added:
     ],
 ]
 ```
+
+**Failed Jobs Table**
+
+Similar to the specific queue db connection settings, a connection for the failed jobs table will need to be established
+so the correct application reruns those failed jobs. Within the `queue` config modify the following lines to point to the 
+connection you configured in the above section:
+
+```php
+'failed' => [
+    'driver'   => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
+    'database' => env('QUEUE_DB_CONNECTION', 'queue-mysql'),
+    'table'    => 'failed_jobs',
+],
+```
+
+**Migrations Note:**
 
 If your cache servers need to share a DB connection with the main application server for content, the `migrations` table 
 will be shared as well. This means that the necessary `jobs` table required when using the database connection can get a 
