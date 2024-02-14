@@ -17,6 +17,11 @@ class CacheServer
         return config('cache-server.header');
     }
 
+    public static function getHeader(string $key): string
+    {
+        return config("cache-server.triggers.$key");
+    }
+
     public static function triggers(): array
     {
         return config('cache-server.triggers', []);

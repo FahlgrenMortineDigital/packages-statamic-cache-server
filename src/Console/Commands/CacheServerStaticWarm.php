@@ -4,6 +4,8 @@ namespace FahlgrendigitalPackages\StatamicCacheServer\Console\Commands;
 
 use FahlgrendigitalPackages\StatamicCacheServer\Actions\ClearRemoteStaticCacheFiles;
 use FahlgrendigitalPackages\StatamicCacheServer\Actions\TriggerRemoteStaticFilesClear;
+use FahlgrendigitalPackages\StatamicCacheServer\CacheServer;
+use FahlgrendigitalPackages\StatamicCacheServer\Enums\CacheHeader;
 use FahlgrendigitalPackages\StatamicCacheServer\Jobs\StaticWarm;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -76,13 +78,13 @@ class CacheServerStaticWarm extends Command
 
     private function warm(): void
     {
-        $cache_server_header = config('cache-server.header');
+        $cache_server_header = CacheServer::header();
         $client_options      = [
             'verify'  => $this->shouldVerifySsl(),
             'auth'    => $this->option('user') && $this->option('password')
                 ? [$this->option('user'), $this->option('password')]
                 : null,
-            'headers' => [$cache_server_header => 'build'] # Necessary for the LB to redirect this request to the cache builder
+            'headers' => [$cache_server_header => CacheServer::getHeader(CacheHeader::BUILD)] # Necessary for the LB to redirect this request to the cache builder
         ];
         $client              = new Client($client_options);
 
